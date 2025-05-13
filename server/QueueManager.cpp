@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "QueueManager.h"
 #include "SessionManager.hpp"
 
@@ -22,7 +22,7 @@ void QueueManager::run()
         TaskQueue.pop();
         lock.unlock();
 
-        std::cout << "[QueueManager::run] TaskQueue ¿¡ ÀÛ¾÷ÀÌ ÀÖ½À´Ï´Ù. ÀÛ¾÷ ÁøÇà -> " << task.message << std::endl;
+        std::cout << "[QueueManager::run] TaskQueue ì— ìž‘ì—…ì´ ìžˆìŠµë‹ˆë‹¤. ìž‘ì—… ì§„í–‰ -> " << task.message << std::endl;
         process(task);
     }
 }
@@ -40,11 +40,19 @@ void QueueManager::process(Task& task)
     {
         std::string CHATID, CHATMSG;
         iss >> CHATID;
-        std::getline(iss, CHATMSG);
-        std::shared_ptr<std::string> shared_msg = std::make_shared<std::string>(CHATID + " " + CHATMSG + "\n");
-        SessionManager::GetInstance().BroadCast(shared_msg);
+        if (session->get_chat_id() == "") { 
+            session->set_chat_id(CHATID); 
+            std::shared_ptr<std::string> msg = std::make_shared<std::string>("CHAT OK\n");
+            session->push_WriteQueue(msg);
+            return;
+        }
+        else {
+            std::getline(iss, CHATMSG);
+            std::shared_ptr<std::string> shared_msg = std::make_shared<std::string>(session->get_chat_id() + " " + CHATMSG + "\n");
+            SessionManager::GetInstance().BroadCast(shared_msg);
+        }
     }
 
     //session->push_WriteQueue(msg);
-    std::cout << "[QueueManager::process] Task ÀÛ¾÷ ¿Ï·á -> " << msg << std::endl;
+    std::cout << "[QueueManager::process] Task ìž‘ì—… ì™„ë£Œ -> " << msg << std::endl;
 }

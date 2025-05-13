@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// ±âº» STL
+// ê¸°ë³¸ STL
 #include <iostream>
 #include <string>
 #include <memory>
@@ -14,12 +14,19 @@
 #include <mutex>
 #include <thread>
 #include <atomic>
+#include <chrono>
+#include <ctime>
 
-// ³×Æ®¿öÅ©
+// ë¡œê·¸
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
+
+// ë„¤íŠ¸ì›Œí¬
 #include <asio.hpp>
 
-// Ä¿½ºÅÒ ±¸Á¶Ã¼
+// ì»¤ìŠ¤í…€ êµ¬ì¡°ì²´
 #include "myStruct.hpp"
+#include "utils.hpp"
 
-// ³×ÀÓ½ºÆäÀÌ½º
+// ë„¤ì„ìŠ¤í˜ì´ìŠ¤
 using asio::ip::tcp;

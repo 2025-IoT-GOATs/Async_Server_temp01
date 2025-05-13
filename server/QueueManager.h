@@ -1,5 +1,4 @@
-#pragma once
-#include <queue>
+ï»¿#pragma once
 
 class QueueManager
 {
@@ -22,7 +21,7 @@ public:
 	void run();
 
 private:
-    void process(Task& task); // ½ÇÁ¦ ÀÛ¾÷ ½ÇÇà ·ÎÁ÷
+    void process(Task& task); // ì‹¤ì œ ì‘ì—… ì‹¤í–‰ ë¡œì§
     
 
 };

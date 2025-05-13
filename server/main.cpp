@@ -1,45 +1,48 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Server.hpp"
 #include "QueueManager.h"
 #include "SessionManager.hpp"
-
 int main() {
+	SetConsoleOutputCP(CP_UTF8);
+	set_debug_log();
 
-	// ³×Æ®¿öÅ© °ü·Ã ºñµ¿±â ÀÛ¾÷ µî·Ï
+	// ë„¤íŠ¸ì›Œí¬ ê´€ë ¨ ë¹„ë™ê¸° ì‘ì—… ë“±ë¡
 	asio::io_context io_context;
 	Server server(io_context, 9000);
 	
-	// ·ÎÁ÷ Ã³¸® °ü·Ã ¸Å´ÏÀú
+	// ë¡œì§ ì²˜ë¦¬ ê´€ë ¨ ë§¤ë‹ˆì €
 	QueueManager& QM = QueueManager::GetInstance();
 	SessionManager& SM = SessionManager::GetInstance();
 
-	// ³×Æ®¿öÅ© Åë½Å ´ã´ç ¾²·¹µå 1~2°³
+	// ë„¤íŠ¸ì›Œí¬ í†µì‹  ë‹´ë‹¹ ì“°ë ˆë“œ 1~2ê°œ
 	std::vector<std::thread> NetThreads;
 	for (int i = 0; i < 2; ++i) {
 		NetThreads.emplace_back(std::thread([&io_context] { io_context.run(); }));
 	}
-	std::cout << "[main] : ³×Æ®¿öÅ© ½º·¹µå ÀÏÇÏ·¯°¨" << std::endl;
+	spdlog::info("ë„¤íŠ¸ì›Œí¬ ìŠ¤ë ˆë“œ ì‹¤í–‰ì™„ë£Œ");
 
-	// ·ÎÁ÷ Ã³¸® ´ã´ç ¾²·¹µå 4°³
+	// ë¡œì§ ì²˜ë¦¬ ë‹´ë‹¹ ì“°ë ˆë“œ 4ê°œ
 	std::vector<std::thread> WorkerThreads;
 	for (int i = 0; i < 4; ++i) {
 		WorkerThreads.emplace_back(std::thread([&QM] { QM.run(); }));
 	}
-	std::cout << "[main] : ¿öÄ¿ ½º·¹µåµé ÀÏÇÏ·¯°¨" << std::endl;
+	spdlog::info("ë¡œì§ ìŠ¤ë ˆë“œ ì‹¤í–‰ì™„ë£Œ");
 	
 
 
-	// ÀÏÇÏ·¯ ³ª°¡½Å ºÎ¸ğ´ÔÀÌ ¿Í¾ß Àáµé ¼ö ÀÖ´Â main ¾²·¹µå³à¼® ..
+	// ì¼í•˜ëŸ¬ ë‚˜ê°€ì‹  ë¶€ëª¨ë‹˜ì´ ì™€ì•¼ ì ë“¤ ìˆ˜ ìˆëŠ” main ì“°ë ˆë“œë…€ì„ ..
 	for (auto& NetThread : NetThreads) {
 		NetThread.join();
 	}
-	std::cout << "[main] : ³×Æ®¿öÅ© ½º·¹µå Åğ±ÙÇÔ" << std::endl;
+	std::cout << "[main] : ë„¤íŠ¸ì›Œí¬ ìŠ¤ë ˆë“œ í‡´ê·¼í•¨" << std::endl;
 
 	for (auto& workerthread : WorkerThreads) {
 		workerthread.join();
-		std::cout << "[main] : ¿öÄ¿ ½º·¹µå Åğ±ÙÇÔ" << std::endl;
+		std::cout << "[main] : ì›Œì»¤ ìŠ¤ë ˆë“œ í‡´ê·¼í•¨" << std::endl;
 	}
-	std::cout << "[main] : ¸ğµç ½º·¹µå Åğ±ÙÇÔ" << std::endl;
+	std::cout << "[main] : ëª¨ë“  ìŠ¤ë ˆë“œ í‡´ê·¼í•¨" << std::endl;
 
 	return 0;
 }
+
+

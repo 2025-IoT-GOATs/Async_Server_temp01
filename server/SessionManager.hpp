@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <memory>
 #include <vector>
 #include <algorithm>
@@ -35,7 +35,7 @@ public:
 				if (auto s = weak_s.lock()) {
 					return s->get_socket() == socket;
 				}
-				return true;  // ÀÌ¹Ì ¼Ò¸êµÊ
+				return true;  // ì´ë¯¸ ì†Œë©¸ë¨
 			}), Sessions.end());
 	}
 

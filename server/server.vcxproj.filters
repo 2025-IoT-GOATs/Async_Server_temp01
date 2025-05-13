@@ -43,5 +43,6 @@
       <Filter>QueueManager</Filter>
     </ClInclude>
     <ClInclude Include="myStruct.hpp" />
+    <ClInclude Include="utils.hpp" />
   </ItemGroup>
 </Project>

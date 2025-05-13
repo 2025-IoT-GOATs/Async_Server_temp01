@@ -1,11 +1,10 @@
 #pragma once
-#include <memory>
-#include <asio.hpp>
 using asio::ip::tcp;
 
 
 class Session : public std::enable_shared_from_this<Session> {
 private:
+	std::string chat_id;
 	std::shared_ptr<tcp::socket> socket;
 	std::string read_msg;
 	std::queue<std::shared_ptr<std::string>> writeQueue;
@@ -16,7 +15,8 @@ public:
 	void start();
 	void push_WriteQueue(std::shared_ptr<std::string> msg);
 	std::shared_ptr<tcp::socket> get_socket() const { return socket; }
-
+	void set_chat_id(std::string id) { chat_id = id; }
+	std::string get_chat_id() { return chat_id; }
 private:
 	friend class SessionManager;
 

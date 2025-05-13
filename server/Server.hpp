@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Session.h"
 
 class Server {
@@ -11,7 +11,7 @@ public:
 		: acceptor(io_context, asio::ip::tcp::endpoint(tcp::v4(), port))
 		, io_context(io_context)
 	{
-		std::cout << "[Server::Server()] : ¿¬°á ´ë±âÁß" << std::endl;
+		std::cout << "[Server::Server()] : ì—°ê²° ëŒ€ê¸°ì¤‘" << std::endl;
 		start_accept();
 	}
 
@@ -19,14 +19,14 @@ private:
 	void start_accept()
 	{
 		auto socket = std::make_shared<tcp::socket>(io_context);
-		std::cout << "[Server::start_accept] : Å¬¶óÀÌ¾ðÆ® ¿¬°á ¼ö½Å ½ÃÀÛ" << std::endl;
+		std::cout << "[Server::start_accept] : í´ë¼ì´ì–¸íŠ¸ ì—°ê²° ìˆ˜ì‹  ì‹œìž‘" << std::endl;
 		acceptor.async_accept(*socket, [this, socket](std::error_code ec) {
 			if (!ec) {
-				std::cout << "[Server::async_accept] : Å¬¶óÀÌ¾ðÆ® ¿¬°á ¿Ï·á" << std::endl;
+				std::cout << "[Server::async_accept] : í´ë¼ì´ì–¸íŠ¸ ì—°ê²° ì™„ë£Œ" << std::endl;
 				std::make_shared<Session>(socket)->start();
 			}
 			else {
-				std::cout << "[Server::async_accept] : ¿¡·¯ -> " << ec.message() << std::endl;
+				std::cout << "[Server::async_accept] : ì—ëŸ¬ -> " << ec.message() << std::endl;
 			}
 			start_accept();
 			});

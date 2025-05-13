@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Session.h"
 #include "QueueManager.h"
 #include "SessionManager.hpp"
@@ -6,13 +6,14 @@
 Session::Session(std::shared_ptr<tcp::socket> _socket)
 	: socket(_socket)
 	, sending(false)
+	, chat_id("")
 {
 }
 
 void Session::start()
 {
 	SessionManager::GetInstance().AddSession(shared_from_this());
-	std::cout << "[Session::start()] : ¼¼¼Ç ½ÃÀÛµÊ" << std::endl;
+	std::cout << "[Session::start()] : ì„¸ì…˜ ì‹œìž‘ë¨" << std::endl;
 	do_read();
 }
 
@@ -28,15 +29,17 @@ void Session::do_read()
 
 			if (self->isValid(msg)) {
 				QueueManager::GetInstance().push({ self,msg });
-				//std::cout << "[Session::do_read] : Å¬¶óÀÌ¾ðÆ® -> " << msg << " Task Queue PUSH ¿Ï·á." << std::endl;
+				spdlog::info("[Session::do_read] : í´ë¼ì´ì–¸íŠ¸ -> " + msg + "Task Queue PUSH ì™„ë£Œ.");
 			}
-			else { std::cout << "[Session::do_read] : Å¬¶óÀÌ¾ðÆ® -> " << msg << " Àß¸øµÈ ÆÐÅ¶, Æó±âÃ³ºÐ ¿Ï·á." << std::endl; }
+			else {
+				spdlog::error("[Session::do_read] : í´ë¼ì´ì–¸íŠ¸ -> " + msg + "Task Queue PUSH ì™„ë£Œ.");
+			}
 
 			self->do_read();
 		}
 		else
 		{
-			std::cout << "[Session::do_read] : ¿¡·¯ ¹ß»ý -> " << ec.message() << std::endl;
+			std::cout << "[Session::do_read] : ì—ëŸ¬ ë°œìƒ -> " << ec.message() << std::endl;
 			self->Close();
 		}
 		});
@@ -46,7 +49,7 @@ void Session::push_WriteQueue(std::shared_ptr<std::string> msg)
 {
 	std::unique_lock<std::mutex> lock(writeMutex);
 	writeQueue.push(msg);
-	//std::cout << "[Session::push_WriteQueue] : lock È¹µæ -> " << *msg << " writeQueue µî·Ï¿Ï·á." << std::endl;
+	//std::cout << "[Session::push_WriteQueue] : lock íšë“ -> " << *msg << " writeQueue ë“±ë¡ì™„ë£Œ." << std::endl;
 	lock.unlock();
 
 	if (!sending && !writeQueue.empty())
@@ -62,12 +65,12 @@ void Session::do_write()
 
 	if (writeQueue.empty()) {
 		sending = false;
-		std::cout << "[Session::do_write] writeQueue °¡ ºñ¾úÀ½ " << std::endl;
+		std::cout << "[Session::do_write] writeQueue ê°€ ë¹„ì—ˆìŒ " << std::endl;
 		return;
 	}
 
 	std::shared_ptr<std::string> msg = writeQueue.front();
-	std::cout << "[Session::do_write] ¼Û½Å ½ÃÀÛ -> " << *msg << std::endl;
+	std::cout << "[Session::do_write] ì†¡ì‹  ì‹œìž‘ -> " << *msg << std::endl;
 
 	auto self(shared_from_this());
 	asio::async_write(*socket, asio::buffer(*msg),
@@ -90,7 +93,7 @@ void Session::do_write()
 			}
 			else
 			{
-				std::cout << "[Session::do_write()] ¿¡·¯ ¹ß»ý -> " << ec.message() << std::endl;
+				std::cout << "[Session::do_write()] ì—ëŸ¬ ë°œìƒ -> " << ec.message() << std::endl;
 				self->Close();
 			}
 		});
@@ -105,18 +108,18 @@ bool Session::isValid(const std::string& packet)
 	std::cout << "[Session::isValid] id -> " << id << std::endl;
 	std::vector<std::string>& validIDs = SessionManager::GetInstance().getValidIds();
 	if (std::find(validIDs.begin(), validIDs.end(), id) != validIDs.end()) {
-		std::cout << "[Session::isValid] À¯È¿¼º °Ë»ç -> true " << std::endl;
+		std::cout << "[Session::isValid] ìœ íš¨ì„± ê²€ì‚¬ -> true " << std::endl;
 		return true;
 	}
 	else {
-		std::cout << "[Session::isValid] À¯È¿¼º °Ë»ç -> false " << std::endl;
+		std::cout << "[Session::isValid] ìœ íš¨ì„± ê²€ì‚¬ -> false " << std::endl;
 		return false;
 	}
 }
 
 void Session::Close()
 {
-	std::cout << "[Session:Close] ¼¼¼Ç Á¾·áµÊ" << std::endl;
+	std::cout << "[Session:Close] ì„¸ì…˜ ì¢…ë£Œë¨" << std::endl;
 	std::error_code ec;
 	socket->close(ec);
 
