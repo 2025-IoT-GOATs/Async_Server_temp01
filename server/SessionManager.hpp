@@ -11,7 +11,7 @@ private:
 	std::vector<std::string> validPacketIDs;
 
 	SessionManager() {
-		validPacketIDs = { "CHAT", "LOGIN", "MOVE" };
+		validPacketIDs = { "CHAT", "MOVE" };
 	}
 	~SessionManager() = default;
 	SessionManager(const SessionManager&) = delete;

@@ -52,6 +52,14 @@ void QueueManager::process(Task& task)
             SessionManager::GetInstance().BroadCast(shared_msg);
         }
     }
+    else if (ID == "MOVE")
+    {
+        std::string DIR;
+        iss >> DIR;
+        // TEST
+        std::shared_ptr<std::string> shared_msg = std::make_shared<std::string>("MOVE " + session->get_chat_id() + " " + DIR + "\n");
+        session->push_WriteQueue(shared_msg);
+    }
 
     //session->push_WriteQueue(msg);
     std::cout << "[QueueManager::process] Task 작업 완료 -> " << msg << std::endl;
