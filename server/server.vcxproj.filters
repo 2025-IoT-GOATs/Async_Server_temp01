@@ -44,5 +44,6 @@
     </ClInclude>
     <ClInclude Include="myStruct.hpp" />
     <ClInclude Include="utils.hpp" />
+    <ClInclude Include="Player.hpp" />
   </ItemGroup>
 </Project>

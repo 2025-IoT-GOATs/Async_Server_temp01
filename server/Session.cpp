@@ -6,7 +6,7 @@
 Session::Session(std::shared_ptr<tcp::socket> _socket)
 	: socket(_socket)
 	, sending(false)
-	, chat_id("")
+	, player()
 {
 }
 
@@ -57,6 +57,16 @@ void Session::push_WriteQueue(std::shared_ptr<std::string> msg)
 		sending = true;
 		do_write();
 	}
+}
+
+void Session::set_chat_id(std::string id)
+{
+	player.nickname = id;
+}
+
+std::string Session::get_chat_id()
+{
+	return player.nickname;
 }
 
 void Session::do_write()

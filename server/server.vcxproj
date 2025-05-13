@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="myStruct.hpp" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Player.hpp" />
     <ClInclude Include="QueueManager.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="SessionManager.hpp" />
