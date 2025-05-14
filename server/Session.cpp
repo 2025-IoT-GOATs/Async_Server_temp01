@@ -29,10 +29,11 @@ void Session::do_read()
 
 			if (self->isValid(msg)) {
 				QueueManager::GetInstance().push({ self,msg });
+				std::cout << "\n\n\n 관호의 메시지 : " << msg << std::endl;
 				spdlog::info("[Session::do_read] : 클라이언트 -> " + msg + "Task Queue PUSH 완료.");
 			}
 			else {
-				spdlog::error("[Session::do_read] : 클라이언트 -> " + msg + "Task Queue PUSH 완료.");
+				spdlog::error("[Session::do_read] : 클라이언트 -> " + msg + "Task 폐기");
 			}
 
 			self->do_read();

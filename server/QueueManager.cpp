@@ -48,7 +48,7 @@ void QueueManager::process(Task& task)
         }
         else {
             std::getline(iss, CHATMSG);
-            std::shared_ptr<std::string> shared_msg = std::make_shared<std::string>(session->get_chat_id() + " " + CHATMSG + "\n");
+            std::shared_ptr<std::string> shared_msg = std::make_shared<std::string>("CHAT " + session->get_chat_id() + " " + CHATMSG + "\n");
             SessionManager::GetInstance().BroadCast(shared_msg);
         }
     }
@@ -56,6 +56,7 @@ void QueueManager::process(Task& task)
     {
         std::string DIR;
         iss >> DIR;
+
         // TEST
         std::shared_ptr<std::string> shared_msg = std::make_shared<std::string>("MOVE " + session->get_chat_id() + " " + DIR + "\n");
         session->push_WriteQueue(shared_msg);
