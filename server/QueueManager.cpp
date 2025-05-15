@@ -7,7 +7,8 @@ void QueueManager::push(const Task& task)
     {
         std::lock_guard<std::mutex> lock(TaskMutex);
         TaskQueue.push(task);
-        std::cout << "[QueueManager::push] task.message -> " << task.message << std::endl;
+        //std::cout << "[QueueManager::push] task.message -> " << task.message << std::endl;
+        spdlog::info("[QueueManager::push] task.message -> " + task.message);
     }
     TaskCV.notify_one();
 }
@@ -22,11 +23,17 @@ void QueueManager::run()
         TaskQueue.pop();
         lock.unlock();
 
-        std::cout << "[QueueManager::run] TaskQueue 에 작업이 있습니다. 작업 진행 -> " << task.message << std::endl;
+        //std::cout << "[QueueManager::run] TaskQueue 에 작업이 있습니다. 작업 진행 -> " << task.message << std::endl;
         process(task);
     }
 }
 
+/// <summary>
+/// ------ 리팩토링 ------
+/// TaskHandler 클래스 생성 후 
+/// Task 별 작업로직 분리 할 것.
+/// </summary>
+/// <param name="task"></param>
 void QueueManager::process(Task& task)
 {
     auto& session = task.session;
@@ -59,7 +66,7 @@ void QueueManager::process(Task& task)
 
         // TEST
         std::shared_ptr<std::string> shared_msg = std::make_shared<std::string>("MOVE " + session->get_chat_id() + " " + DIR + "\n");
-        session->push_WriteQueue(shared_msg);
+        SessionManager::GetInstance().BroadCast(shared_msg);
     }
 
     //session->push_WriteQueue(msg);
