@@ -32,3 +32,4 @@ inline void set_debug_log() {
 	spdlog::set_level(spdlog::level::warn);  // 릴리즈에선 경고 이상만!
 #endif
 }
+

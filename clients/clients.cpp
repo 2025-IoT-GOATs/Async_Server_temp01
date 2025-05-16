@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <asio.hpp>
+#include <asio/ssl.hpp>
 
 using asio::ip::tcp;
 
@@ -8,23 +9,25 @@ int main()
     try
     {
         asio::io_context io_context;
-
+        asio::ssl::context ssl_ctx(asio::ssl::context::tlsv12_client);
+        ssl_ctx.set_verify_mode(asio::ssl::verify_none);
         // 서버 IP와 포트 (원하는대로 수정)
+        asio::ssl::stream<tcp::socket> ssl_stream(io_context,ssl_ctx);
+
         std::string server_ip = "127.0.0.1";
         int server_port = 9000;
-
         tcp::resolver resolver(io_context);
         auto endpoints = resolver.resolve(server_ip, std::to_string(server_port));
-
-        tcp::socket socket(io_context);
-        asio::connect(socket, endpoints);
-
+        asio::connect(ssl_stream.lowest_layer(), endpoints);
         std::cout << "서버 연결됨.\n";
+
+        ssl_stream.handshake(asio::ssl::stream_base::client);
+        std::cout << "TLS 핸드셰이크 완료\n";
 
         std::thread([&]() {
             while (true) {
                 asio::streambuf buf;
-                asio::read_until(socket, buf, "\n");
+                asio::read_until(ssl_stream, buf, "\n");
 
                 std::istream is(&buf);
                 std::string received_msg;
@@ -44,7 +47,7 @@ int main()
             std::getline(std::cin, msg);
 
             msg = "CHAT " + ID + " " + msg + "\n";
-            asio::write(socket, asio::buffer(msg));
+            asio::write(ssl_stream, asio::buffer(msg));
         }
     }
     catch (std::exception& e)

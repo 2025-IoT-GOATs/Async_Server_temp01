@@ -24,6 +24,9 @@
 // 네트워크
 #include <asio.hpp>
 
+// TSL
+#include <asio/ssl.hpp>
+
 // 커스텀 구조체
 #include "myStruct.hpp"
 #include "utils.hpp"

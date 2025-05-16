@@ -9,7 +9,6 @@ class SessionManager {
 private:
 	std::vector<std::weak_ptr<Session>> Sessions;
 	std::vector<std::string> validPacketIDs;
-
 	SessionManager() {
 		validPacketIDs = { "CHAT", "MOVE" };
 	}
@@ -22,18 +21,19 @@ public:
 		static SessionManager instance;
 		return instance;
 	}
-
+	
+	static int getUniqueId() { static int g_id = 0; return g_id++; }
 	std::vector<std::string>& getValidIds() { return validPacketIDs; }
 
 	void AddSession(const std::shared_ptr<Session>& s) {
 		Sessions.push_back(s);
 	}
 
-	void DelSession(std::shared_ptr<tcp::socket> socket) {
+	void DelSession(int id) {
 		Sessions.erase(std::remove_if(Sessions.begin(), Sessions.end(),
-			[socket](const std::weak_ptr<Session>& weak_s) {
+			[id](const std::weak_ptr<Session>& weak_s) {
 				if (auto s = weak_s.lock()) {
-					return s->get_socket() == socket;
+					return s->get_id() == id;
 				}
 				return true;  // 이미 소멸됨
 			}), Sessions.end());
