@@ -7,13 +7,38 @@
 
 # 진행상황
 
-### 다음 회차 목표
+### 4회차 , 패킷 보안 패치 (Open SSL 활용)
 
-- strand , atomic , semapore 써보면서 활용 감 잡기
-- SessionManager :: weak_ptr -> shared_ptr 로 리팩토링 (세션매니저가 세션생명주기관리)
-- 클라이언트도 비동기로 구현
-- 대규모 트래픽이 들어오는 테스트 환경 구상하기
-- 오류 찾기 , 수정
+- 흐름
+    - OpenSSL 의 공개키/개인키를 발급받는다. (crt / key)
+    - asio::ssl::context 를 활용하여 tls 버전과 공개키, 개인키를 등록한다.
+    - asio::ssl::stream<tcp::socket> 객체를 만들어 기존의 소켓을 감싸준다. (이 때 부터 소켓의 생명주기는 stream 내부로 들어가기에 사용자가 관리안해줘도 됨)
+    - close() 대신 shutdown() 혹은 ssl_stream->async_shutdown() 호출이 필요하다.
+
+- 짤막한 지식 추가
+    - TCP 커넥션 -> **TSL 커넥션**
+    - TSL 커넥션 (RSA)
+        - 클라이언트 : TLS버전, 암호화 방식 목록, 랜덤 값 -> 서버
+        - 서버 : 선택된 암호화 방식, 서버 공개키 인증서, 서버 랜덤 값 -> 클라
+        - 클라이언트 : 공개키로 암호화한 pre-master key -> 서버
+        - 서버 : 개인키로 복호화 후 대칭키 생성
+        - 대칭키 기반 암호화통신
+
+``` powershell
+openssl req -x509 -nodes -newkey rsa:2048 -keyout server.key -out server.crt -days 365
+
+# x509	X.509 인증서 생성
+# nodes	개인키에 암호 안 걸게 함 (서버 자동 실행 시 유리)
+# newkey rsa:2048	2048비트 RSA 키 생성
+# keyout server.key	개인키 저장 파일
+# out server.crt	인증서(공개키 포함) 저장 파일
+# days 365	유효기간 1년
+
+Country Name (2 letter code) [XX]: KR
+State or Province Name (full name) []: Seoul
+Organization Name (eg, company) []: YamYamBusan
+Common Name (e.g. server FQDN or YOUR name) []: localhost ## 실 서비스라면 도메인 주소입력
+```
 
 ---
 
