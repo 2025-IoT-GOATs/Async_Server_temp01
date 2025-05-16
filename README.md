@@ -13,6 +13,7 @@
     - OpenSSL 의 공개키/개인키를 발급받는다. (crt / key)
     - asio::ssl::context 를 활용하여 tls 버전과 공개키, 개인키를 등록한다.
     - asio::ssl::stream<tcp::socket> 객체를 만들어 기존의 소켓을 감싸준다. (이 때 부터 소켓의 생명주기는 stream 내부로 들어가기에 사용자가 관리안해줘도 됨)
+    - 그 다음 송신, 수신에서 기존 사용하던 socket 에서 stream 으로 바꿔주면 끝.
     - close() 대신 shutdown() 혹은 ssl_stream->async_shutdown() 호출이 필요하다.
 
 - 짤막한 지식 추가
@@ -39,6 +40,13 @@ State or Province Name (full name) []: Seoul
 Organization Name (eg, company) []: YamYamBusan
 Common Name (e.g. server FQDN or YOUR name) []: localhost ## 실 서비스라면 도메인 주소입력
 ```
+
+- 결과
+    - 정상 작동!
+    <img src="./img/0010.png" width=650>
+
+    - 시행착오 : 첫 테스트 시 TLS 핸드쉐이크를 계속 실패하는 현상 발생
+        - 해결 : 서버측 서버 클래스에서 지역변수인 소켓을 참조캡쳐했던것이 문제, 비동기 작업 등록 시 존재했던 소켓은 다음 메서드 실행 시 소멸된 상황, shared_ptr + 복사캡쳐로 해결완료.
 
 ---
 
