@@ -61,7 +61,7 @@ Common Name (e.g. server FQDN or YOUR name) []: localhost ## 실 서비스라면
     - TSL 적용 전 (와이어샤크)
         - 문제 : 패킷의 raw 데이터가 전부 노출, 중간에서 조작이 가능함
         <img src="./img/noTLS.png" width=650>
-        - CHAT OK 가 적나라하게 노출된 모습
+    - CHAT OK 가 적나라하게 노출된 모습
     <br>
     - TSL 적용 후 (와이어샤크)
         - 해결 : TLS 적용 후 암호화된 데이터가 노출되어 조작 위협방지
