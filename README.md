@@ -50,7 +50,7 @@ openssl req -x509 -nodes -newkey rsa:2048 -keyout server.key -out server.crt -da
 
 Country Name (2 letter code) [XX]: KR
 State or Province Name (full name) []: Seoul
-Organization Name (eg, company) []: YamYamBusan
+Organization Name (eg, company) []: owljunCompany
 Common Name (e.g. server FQDN or YOUR name) []: localhost ## 실 서비스라면 도메인 주소입력
 ```
 
