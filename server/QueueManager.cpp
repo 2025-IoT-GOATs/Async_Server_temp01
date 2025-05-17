@@ -49,7 +49,9 @@ void QueueManager::process(Task& task)
         iss >> CHATID;
         if (session->get_chat_id() == "") { 
             session->set_chat_id(CHATID); 
-            std::shared_ptr<std::string> msg = std::make_shared<std::string>("CHAT OK\n");
+            session->set_pos(100.0, 100.0);
+            write_json(CHATID,"100","100");
+            std::shared_ptr<std::string> msg = std::make_shared<std::string>("CHAT OK " + session->get_chat_id() + " " + session->get_position() + "\n");
             session->push_WriteQueue(msg);
             return;
         }

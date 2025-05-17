@@ -32,3 +32,21 @@ inline void set_debug_log() {
 	spdlog::set_level(spdlog::level::warn);  // 릴리즈에선 경고 이상만!
 #endif
 }
+
+inline bool write_json(std::string name, std::string x, std::string y) {
+    try
+    {
+        nlohmann::json j;
+        j["nickname"] = name;
+        j["PosX"] = x;
+        j["PosY"] = y;
+        std::ofstream outFile("players.json");
+        outFile << j.dump(4);
+    }
+    catch (const std::exception& ex)
+    {
+        std::cerr << ex.what() << std::endl;
+        return 0;
+    }
+    return 1;
+}

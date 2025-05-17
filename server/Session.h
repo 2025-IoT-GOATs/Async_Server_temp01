@@ -16,6 +16,8 @@ public:
 	void push_WriteQueue(std::shared_ptr<std::string> msg);
 	std::shared_ptr<tcp::socket> get_socket() const { return socket; }
 	void set_chat_id(std::string id);
+	void set_pos(double _x, double _y);
+	std::string get_position();
 	std::string get_chat_id();
 private:
 	friend class SessionManager;
