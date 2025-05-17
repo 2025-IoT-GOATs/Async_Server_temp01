@@ -45,18 +45,32 @@ void QueueManager::process(Task& task)
 
     if (ID == "CHAT")
     {
-        std::string CHATID, CHATMSG;
+        std::string CHATMSG;
+        std::getline(iss, CHATMSG);
+        std::shared_ptr<std::string> shared_msg = std::make_shared<std::string>("CHAT " + session->get_chat_id() + " " + CHATMSG + "\n");
+        SessionManager::GetInstance().BroadCast(shared_msg);
+
+    }
+    else if (ID == "LOGIN")
+    {
+        std::string CHATID;
         iss >> CHATID;
-        if (session->get_chat_id() == "") { 
-            session->set_chat_id(CHATID); 
-            std::shared_ptr<std::string> msg = std::make_shared<std::string>("CHAT OK\n");
-            session->push_WriteQueue(msg);
-            return;
-        }
-        else {
-            std::getline(iss, CHATMSG);
-            std::shared_ptr<std::string> shared_msg = std::make_shared<std::string>("CHAT " + session->get_chat_id() + " " + CHATMSG + "\n");
-            SessionManager::GetInstance().BroadCast(shared_msg);
+
+        session->set_chat_id(CHATID);
+        session->set_pos(100.0, 100.0);
+        std::shared_ptr<std::string> msg = std::make_shared<std::string>("LOGIN " + session->get_chat_id() + " " + session->get_position() + "\n");
+        session->push_WriteQueue(msg);
+        std::vector<std::weak_ptr<Session>>& ses = SessionManager::GetInstance().get_Sessions();
+        for (auto it = ses.begin(); it != ses.end(); ++it)
+        {
+            if (auto ses = it->lock()) {
+                std::shared_ptr<std::string> msg = std::make_shared<std::string>("LOGIN " + ses->get_chat_id() + " " + ses->get_position() + "\n");
+                SessionManager::GetInstance().BroadCast(msg);
+            }
+            else
+            {
+                std::cout << "LOGIN 브로드캐스팅 오류 : Session이 존재하지 않습니다!" << std::endl;
+            }
         }
     }
     else if (ID == "MOVE")

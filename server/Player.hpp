@@ -38,4 +38,10 @@ public:
 		, position(_pos)
 	{
 	}
+
+	std::string get_PlayerPos()
+	{
+		std::string msg = position.GetString();
+		return msg;
+	}
 };

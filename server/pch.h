@@ -16,6 +16,10 @@
 #include <atomic>
 #include <chrono>
 #include <ctime>
+#include <fstream>
+
+// json
+#include <nlohmann/json.hpp>
 
 // 로그
 #include <spdlog/spdlog.h>

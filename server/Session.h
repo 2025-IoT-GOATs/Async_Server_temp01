@@ -20,6 +20,8 @@ public:
 	std::shared_ptr<asio::ssl::stream<tcp::socket>> get_stream() const { return ssl_stream; }
 	int get_id() const { return id; }
 	void set_chat_id(std::string id);
+	void set_pos(double _x, double _y);
+	std::string get_position();
 	std::string get_chat_id();
 private:
 	friend class SessionManager;

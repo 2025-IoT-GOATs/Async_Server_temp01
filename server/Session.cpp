@@ -67,6 +67,18 @@ void Session::set_chat_id(std::string id)
 	player.nickname = id;
 }
 
+void Session::set_pos(double _x, double _y)
+{
+	player.position = { _x,_y };
+}
+
+std::string Session::get_position()
+{
+	return player.get_PlayerPos();
+}
+
+
+
 std::string Session::get_chat_id()
 {
 	return player.nickname;
