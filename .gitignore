@@ -399,3 +399,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+server.crt
+server.key
+server/server.crt
+server/server.key
