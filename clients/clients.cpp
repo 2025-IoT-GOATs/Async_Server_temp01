@@ -14,7 +14,7 @@ int main()
         // 서버 IP와 포트 (원하는대로 수정)
         asio::ssl::stream<tcp::socket> ssl_stream(io_context,ssl_ctx);
 
-        std::string server_ip = "127.0.0.1";
+        std::string server_ip = "210.119.12.82";
         int server_port = 9000;
         tcp::resolver resolver(io_context);
         auto endpoints = resolver.resolve(server_ip, std::to_string(server_port));

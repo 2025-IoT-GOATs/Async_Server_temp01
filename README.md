@@ -53,9 +53,20 @@ Common Name (e.g. server FQDN or YOUR name) []: localhost ## 실 서비스라면
 ```
 
 - 결과
-    - 정상 작동!
-    <img src="./img/0010.png" width=650>
-
+    - 기능 문제없이 정상 작동하는 모습
+        <img src="./img/0010.png" width=650>
+    
+    - TLS 적용 전 (와이어샤크)
+        - 문제 : 패킷의 raw 데이터가 전부 노출, 중간에서 조작이 가능함
+        <img src="./img/noTLS.png" width=650>
+        CHAT OK 가 적나라하게 노출된 모습
+    <br>
+    - TLS 적용 후 (와이어샤크)
+        - 해결 : TLS 적용 후 암호화된 데이터가 노출되어 조작 위협방지
+        <img src="./img/TLS.png" width=650>
+        <img src="./img/WireShark.png" width=650>
+        기존 TCP -> TLSv1.2 로 바뀐 모습
+    <br>
     - 시행착오 : 첫 테스트 시 TLS 핸드쉐이크를 계속 실패하는 현상 발생
         - 해결 : 서버측 서버 클래스에서 지역변수인 소켓을 참조캡쳐했던것이 문제, 비동기 작업 등록 시 존재했던 소켓은 다음 메서드 실행 시 소멸된 상황, shared_ptr + 복사캡쳐로 해결완료.
 
