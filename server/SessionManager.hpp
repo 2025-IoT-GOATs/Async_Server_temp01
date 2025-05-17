@@ -11,7 +11,7 @@ private:
 	std::vector<std::string> validPacketIDs;
 
 	SessionManager() {
-		validPacketIDs = { "CHAT", "MOVE" };
+		validPacketIDs = { "CHAT", "MOVE", "LOGIN" };
 	}
 	~SessionManager() = default;
 	SessionManager(const SessionManager&) = delete;
@@ -38,6 +38,7 @@ public:
 				return true;  // 이미 소멸됨
 			}), Sessions.end());
 	}
+	std::vector<std::weak_ptr<Session>>& get_Sessions() { return Sessions; }
 
 	void BroadCast(std::shared_ptr<std::string> msg) {
 		for (auto it = Sessions.begin(); it != Sessions.end(); ) {

@@ -33,17 +33,14 @@ int main()
                 std::cout << "수신: " << received_msg << "\n";
             }
             }).detach();
-        std::string ID;
-        std::cout << "ID > " << std::flush;
-        std::cin >> ID;
+        
         while (true)
         {
             std::string msg;
-            std::cout << std::flush;
             std::cout << "> ";
             std::getline(std::cin, msg);
 
-            msg = "CHAT " + ID + " " + msg + "\n";
+            msg = msg + "\n";
             asio::write(socket, asio::buffer(msg));
         }
     }
