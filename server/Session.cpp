@@ -110,7 +110,7 @@ void Session::do_write()
 				if (!self->writeQueue.empty())
 				{
 					/// [250517] issue : Mutex 재귀 호출로 인한 데드락 발생 -> post 사용, do_write 종료 후 실행으로 해결 (250518)
-					asio::post(self->socket->get_executor(), [self]() {
+					asio::post(self->ssl_stream->get_executor(), [self]() {
 						self->do_write();
 					});
 				}
