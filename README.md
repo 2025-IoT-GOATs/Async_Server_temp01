@@ -1,7 +1,7 @@
 # C++ Asio(NoneBoost) 비동기 , 쓰레드 풀 활용한 서버 설계 및 구현
 
-250519 이후 리포지토리 이동 -> [리포지토리](https://github.com/Owl-jun/Server-Temp)
-
+- 250519 이후 리포지토리 이동 -> [리포지토리](https://github.com/Owl-jun/Server-Temp)
+---
 - 현재 최대고민 : 어떻게하면 내가 디자인한 패킷, 기능을 클라이언트 개발자가 쉽게 연동하여 사용할 수 있을까?
 
 # 목차
