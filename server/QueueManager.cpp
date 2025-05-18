@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 #include "QueueManager.h"
 #include "SessionManager.hpp"
-
 void QueueManager::push(const Task& task)
 {
     {
@@ -55,9 +54,9 @@ void QueueManager::process(Task& task)
     {
         std::string CHATID;
         iss >> CHATID;
-
+        
         session->set_chat_id(CHATID);
-        session->set_pos(100.0, 100.0);
+        session->set_pos(100, 100);
         std::shared_ptr<std::string> msg = std::make_shared<std::string>("LOGIN " + session->get_chat_id() + " " + session->get_position() + "\n");
         session->push_WriteQueue(msg);
         std::vector<std::weak_ptr<Session>>& ses = SessionManager::GetInstance().get_Sessions();
@@ -73,13 +72,22 @@ void QueueManager::process(Task& task)
             }
         }
     }
+
     else if (ID == "MOVE")
     {
         std::string DIR;
         iss >> DIR;
-
-        // TEST
-        std::shared_ptr<std::string> shared_msg = std::make_shared<std::string>("MOVE " + session->get_chat_id() + " " + DIR + "\n");
+        std::istringstream moveIss(session->get_position());
+        std::string curX, curY;
+        moveIss >> curX >> curY;
+        double dX = std::stod(curX);
+        double dY = std::stod(curY);
+        if (DIR == "LEFT") { if (dX - 1 >= 0) { session->set_pos(dX - 1, dY); } }
+        else if (DIR == "RIGHT") { if (dX + 1 <= 900) { session->set_pos(dX + 1, dY); } }
+        else if (DIR == "UP") { if (dY - 1 >= 0) { session->set_pos(dX, dY - 1); } }
+        else if (DIR == "DOWN") { if (dY + 1 <= 500) { session->set_pos(dX, dY + 1); } }
+        else { std::cout << "이동 불가" << std::endl; return; }
+        std::shared_ptr<std::string> shared_msg = std::make_shared<std::string>("MOVE " + session->get_chat_id() + " " + session->get_position() + "\n");
         SessionManager::GetInstance().BroadCast(shared_msg);
     }
 
