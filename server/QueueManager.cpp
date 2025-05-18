@@ -82,10 +82,10 @@ void QueueManager::process(Task& task)
         moveIss >> curX >> curY;
         double dX = std::stod(curX);
         double dY = std::stod(curY);
-        if (DIR == "LEFT") { if (dX - 1 >= 0) { session->set_pos(dX - 1, dY); } }
-        else if (DIR == "RIGHT") { if (dX + 1 <= 900) { session->set_pos(dX + 1, dY); } }
-        else if (DIR == "UP") { if (dY - 1 >= 0) { session->set_pos(dX, dY - 1); } }
-        else if (DIR == "DOWN") { if (dY + 1 <= 500) { session->set_pos(dX, dY + 1); } }
+        if (DIR == "LEFT") { if (dX - 10 >= 0) { session->set_pos(dX - 10, dY); } }
+        else if (DIR == "RIGHT") { if (dX + 10 <= 900) { session->set_pos(dX + 10, dY); } }
+        else if (DIR == "UP") { if (dY - 10 >= 0) { session->set_pos(dX, dY - 10); } }
+        else if (DIR == "DOWN") { if (dY + 10 <= 500) { session->set_pos(dX, dY + 10); } }
         else { std::cout << "이동 불가" << std::endl; return; }
         std::shared_ptr<std::string> shared_msg = std::make_shared<std::string>("MOVE " + session->get_chat_id() + " " + session->get_position() + "\n");
         SessionManager::GetInstance().BroadCast(shared_msg);
